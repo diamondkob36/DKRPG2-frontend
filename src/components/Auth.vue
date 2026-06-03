@@ -1,136 +1,144 @@
 <!-- src/components/Auth.vue -->
 <template>
-  <div class="min-h-screen bg-stone-950 text-stone-300 font-serif flex items-center justify-center p-4 sm:p-8">
+  <!-- เปลี่ยนพื้นหลังเป็นรูปภาพ พร้อมตั้งค่าให้ขยายเต็มหน้าจอ (bg-cover) -->
+  <div 
+    class="min-h-screen text-stone-300 font-serif flex items-center justify-center p-4 sm:p-8 relative overflow-hidden bg-cover bg-center bg-no-repeat"
+    style="background-image: url('https://qvxbofhorjjdoohhhbgd.supabase.co/storage/v1/object/public/Bg/indexBg.webp');"
+  >
     
-    <div class="w-full max-w-5xl bg-stone-900 border-[3px] border-stone-700 shadow-2xl rounded-sm overflow-hidden relative">
+    <!-- แผ่นฟิล์มสีดำโปร่งแสง (Overlay) ปูทับภาพพื้นหลัง เพื่อขับให้กรอบกระจกเด่นขึ้น -->
+    <div class="absolute inset-0 bg-stone-950/60 pointer-events-none"></div>
+
+    <!-- รอยแสงเรืองเวทมนตร์จางๆ (สร้างมิติความลึก) -->
+    <div class="absolute w-[500px] h-[500px] bg-amber-900/20 rounded-full blur-[120px] -top-10 -left-10 pointer-events-none"></div>
+    <div class="absolute w-[400px] h-[400px] bg-amber-700/10 rounded-full blur-[100px] -bottom-10 -right-10 pointer-events-none"></div>
+
+    <!-- กรอบหน้าต่าง UI หลักสไตล์กระจกฝ้า (Glassmorphism) -->
+    <div class="w-full max-w-4xl bg-stone-950/40 backdrop-blur-xl border-[2px] border-amber-600/20 shadow-[0_0_50px_rgba(0,0,0,0.8)] rounded-md overflow-hidden relative">
       
-      <div class="bg-stone-950 border-b border-stone-800 p-6 text-center">
-        <h1 class="text-3xl sm:text-4xl font-bold text-amber-500 tracking-widest drop-shadow-md">
-          DKRPG II
-        </h1>
-        <p class="text-stone-500 mt-2 text-sm italic">ประตูสู่มิติแห่งการผจญภัย</p>
-      </div>
+      <!-- เส้นขอบประดับมุมสไตล์แฟนตาซีโบราณ -->
+      <div class="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-amber-500/40"></div>
+      <div class="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-amber-500/40"></div>
+      <div class="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-amber-500/40"></div>
+      <div class="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-amber-500/40"></div>
 
-      <div class="p-6 sm:p-10">
+      <div class="p-4 sm:p-6">
 
-        <!-- [ โหมด WELCOME ] -->
+        <!-- ================= [ โหมด WELCOME (หน้าแรก) ] ================= -->
         <div v-if="mode === 'welcome'" class="max-w-md mx-auto text-center animate-fade-in">
-          <p class="text-stone-400 mb-8 leading-relaxed text-lg">
+          <p class="text-stone-300 mb-8 leading-relaxed text-base sm:text-lg drop-shadow-md">
             ยินดีต้อนรับสู่อาณาจักรแฟนตาซี ที่ซึ่งคุณสามารถสวมบทบาทเป็นนักผจญภัย เลือกสายอาชีพที่คุณชื่นชอบ และออกเดินทางเพื่อสร้างตำนานของตัวคุณเอง
           </p>
           <div class="flex flex-col sm:flex-row gap-4 justify-center">
-            <button @click="mode = 'login'" class="px-8 py-3 bg-stone-800 hover:bg-stone-700 text-stone-200 font-bold border border-stone-600 rounded-sm transition-colors shadow-md w-full sm:w-auto">
+            <button @click="mode = 'login'" class="px-8 py-3 bg-stone-900/80 hover:bg-stone-800 text-stone-200 font-bold border border-stone-700/60 rounded-sm transition-all duration-200 hover:border-amber-500/40 shadow-md w-full sm:w-auto backdrop-blur-sm">
               เข้าสู่ระบบ
             </button>
-            <button @click="mode = 'register-step1'" class="px-8 py-3 bg-amber-700 hover:bg-amber-600 text-stone-100 font-bold border border-amber-500 rounded-sm transition-colors shadow-md w-full sm:w-auto">
+            <button @click="mode = 'register-step1'" class="px-8 py-3 bg-amber-700/80 hover:bg-amber-600/90 text-stone-100 font-bold border border-amber-500/50 rounded-sm transition-all duration-200 hover:shadow-[0_0_15px_rgba(217,119,6,0.4)] w-full sm:w-auto backdrop-blur-sm">
               สร้างตัวละครใหม่
             </button>
           </div>
         </div>
         
-        <!-- [ โหมด LOG IN ] -->
+        <!-- ================= [ โหมด LOG IN ] ================= -->
         <div v-else-if="mode === 'login'" class="max-w-sm mx-auto animate-fade-in">
-          <h2 class="text-2xl text-amber-600 font-bold mb-6 text-center border-b border-stone-700 pb-2">ลงชื่อเข้าสู่ระบบ</h2>
+          <h2 class="text-2xl text-amber-500/90 font-bold mb-6 text-center border-b border-amber-600/10 pb-2 drop-shadow-md">ลงชื่อเข้าสู่ระบบ</h2>
           
           <form @submit.prevent="handleLogin" class="space-y-5">
             <div>
-              <label class="block text-stone-400 text-sm mb-1">จดหมายเวทมนตร์ (Email)</label>
-              <input v-model="email" type="email" required class="w-full px-4 py-2 bg-stone-950 border border-stone-700 rounded-sm text-stone-200 focus:outline-none focus:border-amber-600 transition-colors" />
+              <label class="block text-stone-300 text-sm mb-1 drop-shadow-md">จดหมายเวทมนตร์ (Email)</label>
+              <input v-model="email" type="email" required class="w-full px-4 py-2 bg-stone-950/60 border border-stone-700/80 rounded-sm text-stone-100 focus:outline-none focus:border-amber-500/70 transition-colors backdrop-blur-sm shadow-inner" />
             </div>
             <div>
-              <label class="block text-stone-400 text-sm mb-1">รหัสลับ (Password)</label>
-              <input v-model="password" type="password" required class="w-full px-4 py-2 bg-stone-950 border border-stone-700 rounded-sm text-stone-200 focus:outline-none focus:border-amber-600 transition-colors" />
+              <label class="block text-stone-300 text-sm mb-1 drop-shadow-md">รหัสลับ (Password)</label>
+              <input v-model="password" type="password" required class="w-full px-4 py-2 bg-stone-950/60 border border-stone-700/80 rounded-sm text-stone-100 focus:outline-none focus:border-amber-500/70 transition-colors backdrop-blur-sm shadow-inner" />
             </div>
             
             <div class="flex gap-4 pt-2">
-              <button type="button" @click="mode = 'welcome'" class="w-1/3 py-3 bg-stone-800 hover:bg-stone-700 text-stone-400 border border-stone-600 rounded-sm transition-colors font-bold">
+              <button type="button" @click="mode = 'welcome'" class="w-1/3 py-3 bg-stone-900/60 hover:bg-stone-800 text-stone-300 border border-stone-700/80 rounded-sm transition-colors font-bold backdrop-blur-sm">
                 กลับ
               </button>
-              <button type="submit" :disabled="loading" class="w-2/3 py-3 bg-amber-700 hover:bg-amber-600 text-stone-100 font-bold rounded-sm shadow-md transition-colors border border-amber-500">
+              <button type="submit" :disabled="loading" class="w-2/3 py-3 bg-amber-700/80 hover:bg-amber-600 text-stone-100 font-bold rounded-sm shadow-md transition-colors border border-amber-500/40 backdrop-blur-sm">
                 {{ loading ? 'กำลังร่ายเวท...' : 'เข้าสู่โลกต่างมิติ' }}
               </button>
             </div>
           </form>
         </div>
 
-        <!-- [ โหมด REGISTER - STEP 1 ] -->
+        <!-- ================= [ โหมด REGISTER - STEP 1 ] ================= -->
         <div v-else-if="mode === 'register-step1'" class="max-w-sm mx-auto animate-fade-in">
-          <h2 class="text-2xl text-amber-600 font-bold mb-6 text-center border-b border-stone-700 pb-2">จารึกนามนักผจญภัย</h2>
+          <h2 class="text-2xl text-amber-500/90 font-bold mb-6 text-center border-b border-amber-600/10 pb-2 drop-shadow-md">จารึกนามนักผจญภัย</h2>
           
           <form @submit.prevent="mode = 'register-step2'" class="space-y-5">
             <div>
-              <label class="block text-stone-400 text-sm mb-1">นามแฝง (Username)</label>
-              <input v-model="username" type="text" required class="w-full px-4 py-2 bg-stone-950 border border-stone-700 rounded-sm text-stone-200 focus:outline-none focus:border-amber-600" />
+              <label class="block text-stone-300 text-sm mb-1 drop-shadow-md">นามแฝง (Username)</label>
+              <input v-model="username" type="text" required class="w-full px-4 py-2 bg-stone-950/60 border border-stone-700/80 rounded-sm text-stone-100 focus:outline-none focus:border-amber-500/70 backdrop-blur-sm shadow-inner" />
             </div>
             <div>
-              <label class="block text-stone-400 text-sm mb-1">จดหมายเวทมนตร์ (Email)</label>
-              <input v-model="email" type="email" required class="w-full px-4 py-2 bg-stone-950 border border-stone-700 rounded-sm text-stone-200 focus:outline-none focus:border-amber-600" />
+              <label class="block text-stone-300 text-sm mb-1 drop-shadow-md">จดหมายเวทมนตร์ (Email)</label>
+              <input v-model="email" type="email" required class="w-full px-4 py-2 bg-stone-950/60 border border-stone-700/80 rounded-sm text-stone-100 focus:outline-none focus:border-amber-500/70 backdrop-blur-sm shadow-inner" />
             </div>
             <div>
-              <label class="block text-stone-400 text-sm mb-1">รหัสลับ (Password)</label>
-              <input v-model="password" type="password" required minlength="6" class="w-full px-4 py-2 bg-stone-950 border border-stone-700 rounded-sm text-stone-200 focus:outline-none focus:border-amber-600" />
+              <label class="block text-stone-300 text-sm mb-1 drop-shadow-md">รหัสลับ (Password)</label>
+              <input v-model="password" type="password" required minlength="6" class="w-full px-4 py-2 bg-stone-950/60 border border-stone-700/80 rounded-sm text-stone-100 focus:outline-none focus:border-amber-500/70 backdrop-blur-sm shadow-inner" />
             </div>
             
             <div class="flex gap-4 pt-2">
-              <button type="button" @click="mode = 'welcome'" class="w-1/3 py-2 bg-stone-800 hover:bg-stone-700 text-stone-400 border border-stone-600 rounded-sm transition-colors font-bold">
+              <button type="button" @click="mode = 'welcome'" class="w-1/3 py-2 bg-stone-900/60 hover:bg-stone-800 text-stone-300 border border-stone-700/80 rounded-sm transition-colors font-bold backdrop-blur-sm">
                 กลับ
               </button>
-              <button type="submit" class="w-2/3 py-2 bg-amber-700 hover:bg-amber-600 text-stone-100 font-bold border border-amber-500 rounded-sm transition-colors">
+              <button type="submit" class="w-2/3 py-2 bg-amber-700/80 hover:bg-amber-600 text-stone-100 font-bold border border-amber-500/40 rounded-sm transition-colors backdrop-blur-sm">
                 เลือกสายอาชีพ ➔
               </button>
             </div>
           </form>
         </div>
 
-        <!-- [ โหมด REGISTER - STEP 2 ] -->
-        <div v-else-if="mode === 'register-step2'" class="animate-fade-in">
-          <h2 class="text-2xl text-amber-600 font-bold mb-2 text-center">เลือกเส้นทางแห่งโชคชะตา</h2>
-          <p class="text-center text-stone-500 mb-8">โปรดเลือกสายอาชีพที่ต้องการสำหรับ "{{ username }}"</p>
-          
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-            <div 
-              v-for="cls in classOptions" :key="cls.key"
-              @click="classKey = cls.key"
-              :class="['relative p-4 border-2 rounded-sm cursor-pointer transition-all duration-300', 
-                       classKey === cls.key ? 'border-amber-500 bg-stone-800 shadow-[0_0_15px_rgba(217,119,6,0.3)]' : 'border-stone-700 bg-stone-950 hover:border-stone-500']"
-            >
-              <div v-if="classKey === cls.key" class="absolute top-2 right-2 text-amber-500">✨</div>
-              
-              <div class="h-32 flex items-center justify-center mb-4 bg-stone-900 border border-stone-800 rounded overflow-hidden">
+        <!-- ================= [ โหมด REGISTER - STEP 2 ] ================= -->
+        <div v-else-if="mode === 'register-step2'" class="animate-fade-in flex flex-col justify-between">
+          <div class="flex-1 flex flex-col min-h-0">
+            <h2 class="text-xl sm:text-2xl text-amber-500/90 font-bold text-center drop-shadow-md mb-1">เลือกเส้นทางแห่งโชคชะตา</h2>
+            <p class="text-center text-stone-300 text-sm sm:text-base drop-shadow-md mb-4">"{{ username }}"</p>
+            
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 max-w-7xl mx-auto w-full">
+              <div 
+                v-for="cls in classOptions" :key="cls.key"
+                @click="classKey = cls.key"
+                :class="['relative p-3 border rounded-sm cursor-pointer transition-all duration-300 backdrop-blur-md flex flex-col h-fit', 
+                         classKey === cls.key ? 'border-amber-500 bg-amber-950/30 shadow-[0_0_20px_rgba(217,119,6,0.4)]' : 'border-stone-700/60 bg-stone-950/50 hover:border-amber-500/50 hover:bg-stone-900/60']"
+              >
+                <div v-if="classKey === cls.key" class="absolute top-2 right-2 text-amber-500 text-sm drop-shadow-md">✨</div>
                 
-                <!-- 🖼️ ระบบ Spritesheet ที่แก้ไขแล้ว -->
-                <div v-if="cls.isSprite" class="sprite-container" :style="{ '--frames': cls.frames }">
-                  <img :src="cls.image" :alt="cls.name" class="sprite-image" />
+                <div class="h-24 sm:h-28 flex items-center justify-center mb-3 bg-stone-950/60 border border-stone-800/80 rounded overflow-hidden shadow-inner flex-shrink-0">
+                  <div v-if="cls.isSprite" class="sprite-md" :style="{ '--frames': cls.frames }">
+                    <img :src="cls.image" :alt="cls.name" class="sprite-image-md" />
+                  </div>
+                  <img v-else :src="cls.image" :alt="cls.name" class="max-h-full p-2 object-contain filter drop-shadow-md" />
                 </div>
                 
-                <!-- 🖼️ กรณีเป็นภาพนิ่งธรรมดา -->
-                <img v-else :src="cls.image" :alt="cls.name" class="max-h-full p-2 object-contain filter drop-shadow-lg" />
-              </div>
-              
-              <h3 class="text-lg font-bold text-amber-400 text-center mb-2">{{ cls.name }}</h3>
-              <p class="text-xs text-stone-400 text-center h-12 mb-4">{{ cls.desc }}</p>
-              
-              <div class="grid grid-cols-2 gap-1 text-[10px] bg-stone-950 p-2 border border-stone-800 rounded">
-                <div class="text-red-400">HP: {{ cls.stats.hp }}</div>
-                <div class="text-blue-400">MP: {{ cls.stats.mp }}</div>
-                <div class="text-stone-300">STR: {{ cls.stats.str }}</div>
-                <div class="text-stone-300">AGI: {{ cls.stats.agi }}</div>
-                <div class="text-stone-300 col-span-2">INT: {{ cls.stats.int }}</div>
+                <h3 class="text-sm sm:text-base font-bold text-amber-400 text-center mb-2 drop-shadow-md line-clamp-2">{{ cls.name }}</h3>
+                <p class="text-[11px] sm:text-xs text-stone-300 text-center mb-3 line-clamp-3 leading-relaxed">{{ cls.desc }}</p>
+                
+                <div class="grid grid-cols-2 gap-1 text-[10px] sm:text-xs bg-stone-950/70 p-2 border border-stone-800/80 rounded-sm shadow-inner">
+                  <div class="text-red-400/90">HP: {{ cls.stats.hp }}</div>
+                  <div class="text-blue-400/90">MP: {{ cls.stats.mp }}</div>
+                  <div class="text-stone-300">STR: {{ cls.stats.str }}</div>
+                  <div class="text-stone-300">AGI: {{ cls.stats.agi }}</div>
+                </div>
               </div>
             </div>
           </div>
 
-          <div class="flex justify-center gap-4">
-            <button type="button" @click="mode = 'register-step1'" class="px-6 py-3 bg-stone-800 hover:bg-stone-700 text-stone-400 border border-stone-600 rounded-sm transition-colors font-bold">
+          <div class="flex justify-center gap-3 mt-4 flex-shrink-0">
+            <button type="button" @click="mode = 'register-step1'" class="px-4 sm:px-6 py-2 bg-stone-900/60 hover:bg-stone-800 text-stone-300 border border-stone-700/80 rounded-sm transition-colors font-bold text-sm backdrop-blur-sm">
               ย้อนกลับ
             </button>
-            <button @click="handleRegister" :disabled="loading" class="px-8 py-3 bg-amber-700 hover:bg-amber-600 text-stone-100 font-bold border border-amber-500 rounded-sm shadow-md transition-colors">
-              {{ loading ? 'กำลังร่ายเวท...' : 'ยืนยันและเริ่มต้นการผจญภัย ⚔️' }}
+            <button @click="handleRegister" :disabled="loading" class="px-6 sm:px-8 py-2 bg-amber-700/80 hover:bg-amber-600 text-stone-100 font-bold border border-amber-500/40 rounded-sm shadow-[0_4px_15px_rgba(0,0,0,0.5)] transition-colors text-sm backdrop-blur-sm">
+              {{ loading ? 'กำลังร่ายเวท...' : 'เริ่มการผจญภัย ⚔️' }}
             </button>
           </div>
         </div>
 
-        <div v-if="errorMessage" class="mt-4 p-3 bg-red-900/30 border border-red-700 rounded text-red-400 text-sm text-center">
+        <div v-if="errorMessage" class="mt-4 p-3 bg-red-950/60 backdrop-blur-md border border-red-900/50 rounded-sm text-red-300 text-sm text-center shadow-md">
           {{ errorMessage }}
         </div>
 
@@ -167,24 +175,27 @@ const classOptions = [
     name: 'อัศวิน (Knight)',
     desc: 'แข็งแกร่งดั่งหินผา ทนทานต่อการโจมตีทางกายภาพ',
     stats: { hp: 150, mp: 30, str: 15, agi: 5, int: 5 },
-    image: '/image/knight.png',
-    isSprite: false
+    image: 'https://qvxbofhorjjdoohhhbgd.supabase.co/storage/v1/object/public/Npc/Knight_stand2.webp',
+    isSprite: true,
+    frames: 4
   },
   {
     key: 'mage',
     name: 'จอมเวท (Mage)',
     desc: 'ผู้ควบคุมพลังธาตุ พลังทำลายล้างสูงแต่ร่างกายบอบบาง',
     stats: { hp: 80, mp: 120, str: 3, agi: 7, int: 20 },
-    image: '/image/mage.png',
-    isSprite: false
+    image: 'https://qvxbofhorjjdoohhhbgd.supabase.co/storage/v1/object/public/Npc/Knight_stand2.webp',
+    isSprite: true,
+    frames: 4
   },
   {
     key: 'rogue',
     name: 'นักฆ่า (Rogue)',
     desc: 'ว่องไวดั่งสายลม เน้นการหลบหลีกและโจมตีจุดตาย',
     stats: { hp: 100, mp: 50, str: 10, agi: 18, int: 5 },
-    image: '/image/rogue.png',
-    isSprite: false
+    image: 'https://qvxbofhorjjdoohhhbgd.supabase.co/storage/v1/object/public/Npc/Knight_stand2.webp',
+    isSprite: true,
+    frames: 4
   }
 ]
 
@@ -246,31 +257,68 @@ const handleRegister = async () => {
   animation: fadeIn 0.4s ease-in-out;
 }
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
+  from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* 🌟 ระบบแสดงผล Spritesheet CSS 🌟 */
-.sprite-container {
-  width: 96px;  /* ขนาดกล่องตัวละคร กำหนดให้ใหญ่พอดีตา */
-  height: 96px; 
+.sprite-box {
+  width: 96px;  
+  height: 96px;
+  background-repeat: no-repeat;
+  background-size: calc(100% * var(--frames)) 100%;
+  background-position: 0 0;
+  margin: 0 auto;
+  image-rendering: pixelated; 
+  animation: runSprite 0.8s steps(var(--frames)) infinite;
+}
+
+.sprite-sm {
+  width: 60px;  
+  height: 60px;
   overflow: hidden;
   position: relative;
   margin: 0 auto;
 }
 
-.sprite-image {
+.sprite-image-sm {
   height: 100%;
   max-width: none;
   width: calc(100% * var(--frames));
   position: absolute;
   left: 0;
   top: 0;
-  image-rendering: pixelated; /* ทำให้ขอบภาพ Pixel คมชัด */
-  animation: runSprite 0.8s steps(var(--frames)) infinite;
+  image-rendering: pixelated;
+  animation: runSpriteSmall 0.8s steps(var(--frames)) infinite;
+}
+
+.sprite-md {
+  width: 80px;  
+  height: 80px;
+  overflow: hidden;
+  position: relative;
+  margin: 0 auto;
+}
+
+.sprite-image-md {
+  height: 100%;
+  max-width: none;
+  width: calc(100% * var(--frames));
+  position: absolute;
+  left: 0;
+  top: 0;
+  image-rendering: pixelated;
+  animation: runSpriteMedium 0.8s steps(var(--frames)) infinite;
 }
 
 @keyframes runSprite {
+  to { background-position: -100% 0; }
+}
+
+@keyframes runSpriteSmall {
+  to { transform: translateX(-100%); }
+}
+
+@keyframes runSpriteMedium {
   to { transform: translateX(-100%); }
 }
 </style>

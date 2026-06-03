@@ -26,19 +26,29 @@ body {
   margin: 0 auto;
 }
 
+/* 🌟 ระบบแสดงผล Spritesheet CSS (แก้ไขแอนิเมชันให้เป๊ะ 100%) 🌟 */
 .sprite-box {
-  width: 96px;  /* ขนาดกล่องที่ต้องการ */
+  width: 72px;  /* สัดส่วนความกว้างที่พอดีกับรูปที่ตัดมาจาก Piskel */
   height: 96px;
-  background-repeat: no-repeat;
-  /* จัดตำแหน่งภาพให้อยู่กลางกล่องและขยายขนาดให้พอดีเฟรม */
-  background-size: calc(100% * var(--frames)) 100%;
-  background-position: 0 0;
+  overflow: hidden; /* หัวใจสำคัญ: ตัดภาพเฟรมอื่นที่ล้นเกินทิ้งไป ป้องกันการทะลุ */
+  position: relative;
   margin: 0 auto;
-  image-rendering: pixelated;
-  /* เรียกใช้แอนิเมชัน */
+}
+
+.sprite-image {
+  height: 100%;
+  /* บังคับให้ความกว้างรวม = จำนวนเฟรม x ความกว้างกล่อง (จะไม่มีวันขาดหรือเกิน) */
+  width: calc(100% * var(--frames)); 
+  max-width: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  image-rendering: pixelated; 
+  /* เล่นแอนิเมชันตามจำนวนเฟรม */
   animation: runSprite 0.8s steps(var(--frames)) infinite;
 }
 
 @keyframes runSprite {
-  to { background-position: -100% 0; } /* เลื่อนภาพไปทางซ้ายจนสุดเฟรม */
+  /* เลื่อนแกน X ไปซ้ายสุด 100% ของความกว้างรูปภาพ */
+  to { transform: translateX(-100%); }
 }
