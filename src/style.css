@@ -4,3 +4,22 @@ body {
   background-color: #0c0a09; /* สีโทน stone-950 */
   margin: 0;
 }
+
+/* กำหนดขนาดของ 1 เฟรม */
+.sprite-character {
+  width: 64px;  /* ความกว้างของ 1 เฟรม */
+  height: 64px; /* ความสูงของ 1 เฟรม */
+  background-repeat: no-repeat;
+  
+  /* ให้ขยายขนาดภาพให้คมชัด (สำหรับภาพ Pixel Art) */
+  image-rendering: pixelated; 
+  
+  /* เรียกใช้ Animation ชื่อ playSprite ใช้เวลา 0.8 วิ, มี 4 เฟรม, วนลูปเรื่อยๆ */
+  animation: playSprite 0.8s steps(4) infinite;
+}
+
+/* คำสั่งเลื่อนภาพแบคกราวด์ */
+@keyframes playSprite {
+  from { background-position: 0px 0px; }
+  to { background-position: -256px 0px; } /* ติดลบความกว้างรวมของภาพทั้งหมด */
+}
