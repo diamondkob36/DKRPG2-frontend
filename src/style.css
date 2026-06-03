@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 body {
-  background-color: #0c0a09; /* สีโทน stone-950 */
+  background-color: #0c0a09; /* stone-950 */
   margin: 0;
 }
 
@@ -18,8 +18,27 @@ body {
   animation: playSprite 0.8s steps(4) infinite;
 }
 
-/* คำสั่งเลื่อนภาพแบคกราวด์ */
-@keyframes playSprite {
-  from { background-position: 0px 0px; }
-  to { background-position: -256px 0px; } /* ติดลบความกว้างรวมของภาพทั้งหมด */
+.sprite-container {
+  height: 96px; /* ล็อคแค่ความสูงที่คุณพอใจ */
+  aspect-ratio: 3 / 4; /* ปรับสัดส่วนกว้าง/สูงให้ตรงกับ 1 เฟรมของรูป (ถ้าตัวผอมสูงใช้ 3/4 หรือ 1/1 ถ้าเป็นจัตุรัส) */
+  overflow: hidden;
+  position: relative;
+  margin: 0 auto;
+}
+
+.sprite-box {
+  width: 96px;  /* ขนาดกล่องที่ต้องการ */
+  height: 96px;
+  background-repeat: no-repeat;
+  /* จัดตำแหน่งภาพให้อยู่กลางกล่องและขยายขนาดให้พอดีเฟรม */
+  background-size: calc(100% * var(--frames)) 100%;
+  background-position: 0 0;
+  margin: 0 auto;
+  image-rendering: pixelated;
+  /* เรียกใช้แอนิเมชัน */
+  animation: runSprite 0.8s steps(var(--frames)) infinite;
+}
+
+@keyframes runSprite {
+  to { background-position: -100% 0; } /* เลื่อนภาพไปทางซ้ายจนสุดเฟรม */
 }

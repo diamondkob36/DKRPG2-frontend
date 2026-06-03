@@ -2,10 +2,8 @@
 <template>
   <div class="min-h-screen bg-stone-950 text-stone-300 font-serif flex items-center justify-center p-4 sm:p-8">
     
-    <!-- กรอบหน้าต่าง UI หลัก -->
     <div class="w-full max-w-5xl bg-stone-900 border-[3px] border-stone-700 shadow-2xl rounded-sm overflow-hidden relative">
       
-      <!-- ลวดลายประดับส่วนหัว -->
       <div class="bg-stone-950 border-b border-stone-800 p-6 text-center">
         <h1 class="text-3xl sm:text-4xl font-bold text-amber-500 tracking-widest drop-shadow-md">
           DKRPG II
@@ -15,7 +13,7 @@
 
       <div class="p-6 sm:p-10">
 
-        <!-- ================= [ โหมด WELCOME (หน้าแรก) ] ================= -->
+        <!-- [ โหมด WELCOME ] -->
         <div v-if="mode === 'welcome'" class="max-w-md mx-auto text-center animate-fade-in">
           <p class="text-stone-400 mb-8 leading-relaxed text-lg">
             ยินดีต้อนรับสู่อาณาจักรแฟนตาซี ที่ซึ่งคุณสามารถสวมบทบาทเป็นนักผจญภัย เลือกสายอาชีพที่คุณชื่นชอบ และออกเดินทางเพื่อสร้างตำนานของตัวคุณเอง
@@ -30,7 +28,7 @@
           </div>
         </div>
         
-        <!-- ================= [ โหมด LOG IN ] ================= -->
+        <!-- [ โหมด LOG IN ] -->
         <div v-else-if="mode === 'login'" class="max-w-sm mx-auto animate-fade-in">
           <h2 class="text-2xl text-amber-600 font-bold mb-6 text-center border-b border-stone-700 pb-2">ลงชื่อเข้าสู่ระบบ</h2>
           
@@ -55,7 +53,7 @@
           </form>
         </div>
 
-        <!-- ================= [ โหมด REGISTER - STEP 1 (ข้อมูลบัญชี) ] ================= -->
+        <!-- [ โหมด REGISTER - STEP 1 ] -->
         <div v-else-if="mode === 'register-step1'" class="max-w-sm mx-auto animate-fade-in">
           <h2 class="text-2xl text-amber-600 font-bold mb-6 text-center border-b border-stone-700 pb-2">จารึกนามนักผจญภัย</h2>
           
@@ -84,12 +82,11 @@
           </form>
         </div>
 
-        <!-- ================= [ โหมด REGISTER - STEP 2 (เลือกตัวละคร) ] ================= -->
+        <!-- [ โหมด REGISTER - STEP 2 ] -->
         <div v-else-if="mode === 'register-step2'" class="animate-fade-in">
           <h2 class="text-2xl text-amber-600 font-bold mb-2 text-center">เลือกเส้นทางแห่งโชคชะตา</h2>
           <p class="text-center text-stone-500 mb-8">โปรดเลือกสายอาชีพที่ต้องการสำหรับ "{{ username }}"</p>
           
-          <!-- ปรับเป็น 4 คอลัมน์สำหรับ 4 อาชีพ -->
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
             <div 
               v-for="cls in classOptions" :key="cls.key"
@@ -99,15 +96,11 @@
             >
               <div v-if="classKey === cls.key" class="absolute top-2 right-2 text-amber-500">✨</div>
               
-              <div class="h-28 flex items-center justify-center mb-4 bg-stone-900 border border-stone-800 rounded overflow-hidden">
+              <div class="h-32 flex items-center justify-center mb-4 bg-stone-900 border border-stone-800 rounded overflow-hidden">
                 
-                <!-- 🖼️ กรณีเป็น Spritesheet (ขยับได้) -->
-                <div v-if="cls.isSprite" class="w-16 h-16 overflow-hidden relative flex justify-start">
-                  <!-- เทคนิค CSS Sprite: ขยายภาพตามจำนวนเฟรม แล้วเลื่อนแกน X -->
-                  <img :src="cls.image" :alt="cls.name" 
-                       class="h-full max-w-none absolute left-0" 
-                       :style="{ width: `${cls.frames * 100}%`, animation: `playSprite 0.8s steps(${cls.frames}) infinite` }" 
-                       style="image-rendering: pixelated;" />
+                <!-- 🖼️ ระบบ Spritesheet ที่แก้ไขแล้ว -->
+                <div v-if="cls.isSprite" class="sprite-container" :style="{ '--frames': cls.frames }">
+                  <img :src="cls.image" :alt="cls.name" class="sprite-image" />
                 </div>
                 
                 <!-- 🖼️ กรณีเป็นภาพนิ่งธรรมดา -->
@@ -137,7 +130,6 @@
           </div>
         </div>
 
-        <!-- แสดง Error -->
         <div v-if="errorMessage" class="mt-4 p-3 bg-red-900/30 border border-red-700 rounded text-red-400 text-sm text-center">
           {{ errorMessage }}
         </div>
@@ -158,7 +150,7 @@ const errorMessage = ref('')
 const email = ref('')
 const password = ref('')
 const username = ref('')
-const classKey = ref('novice') // เปลี่ยนค่าเริ่มต้นเป็น novice
+const classKey = ref('novice') 
 
 const classOptions = [
   {
@@ -166,7 +158,6 @@ const classOptions = [
     name: 'ผู้ฝึกหัด (Novice)',
     desc: 'นักผจญภัยหน้าใหม่ ไร้ประสบการณ์แต่เต็มไปด้วยศักยภาพแฝงเร้น',
     stats: { hp: 100, mp: 50, str: 10, agi: 10, int: 10 },
-    // ใส่ URL ภาพที่คุณอัปโหลดไว้ พร้อมเปิดระบบ Spritesheet
     image: 'https://qvxbofhorjjdoohhhbgd.supabase.co/storage/v1/object/public/Npc/Novice_stand.webp',
     isSprite: true,
     frames: 4
@@ -233,7 +224,7 @@ const handleRegister = async () => {
           str: selectedClass.stats.str,
           agi: selectedClass.stats.agi,
           int: selectedClass.stats.int,
-          avatar_url: selectedClass.image // บันทึกรูปเข้าไปในฐานข้อมูลด้วย
+          avatar_url: selectedClass.image 
         }
       }
     })
@@ -251,7 +242,6 @@ const handleRegister = async () => {
 </script>
 
 <style scoped>
-/* แอนิเมชันสำหรับสลับหน้าจอ */
 .animate-fade-in {
   animation: fadeIn 0.4s ease-in-out;
 }
@@ -260,9 +250,27 @@ const handleRegister = async () => {
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* 🌟 แอนิเมชันหลักสำหรับ Spritesheet ทุกประเภท 🌟 */
-@keyframes playSprite {
-  /* เลื่อนแกน X ไปซ้ายสุด 100% ของความกว้างรูปภาพ */
-  100% { transform: translateX(-100%); }
+/* 🌟 ระบบแสดงผล Spritesheet CSS 🌟 */
+.sprite-container {
+  width: 96px;  /* ขนาดกล่องตัวละคร กำหนดให้ใหญ่พอดีตา */
+  height: 96px; 
+  overflow: hidden;
+  position: relative;
+  margin: 0 auto;
+}
+
+.sprite-image {
+  height: 100%;
+  max-width: none;
+  width: calc(100% * var(--frames));
+  position: absolute;
+  left: 0;
+  top: 0;
+  image-rendering: pixelated; /* ทำให้ขอบภาพ Pixel คมชัด */
+  animation: runSprite 0.8s steps(var(--frames)) infinite;
+}
+
+@keyframes runSprite {
+  to { transform: translateX(-100%); }
 }
 </style>
