@@ -11,6 +11,7 @@ interface PlayerHUDProps {
   maxMp: number
   exp: number
   maxExp: number
+  classImageUrl?: string // 🆕 รับ URL รูปภาพอาชีพ
   onShowDetails: () => void
 }
 
@@ -25,23 +26,30 @@ export default function PlayerHUD({
   maxMp,
   exp,
   maxExp,
+  classImageUrl, // 🆕 เรียกใช้งาน
   onShowDetails
 }: PlayerHUDProps) {
-  // คำนวณสัดส่วนเปอร์เซ็นต์ของหลอดต่างๆ
   const hpPercent = maxHp > 0 ? (hp / maxHp) * 100 : 0;
   const mpPercent = maxMp > 0 ? (mp / maxMp) * 100 : 0;
   const expPercent = maxExp > 0 ? (exp / maxExp) * 100 : 0;
 
   return (
-    // 🔹 กรอบนอกสุดกดได้ (มี onClick และ hover เอฟเฟกต์)
     <div 
       onClick={onShowDetails}
       className="fixed top-3 left-3 w-[340px] bg-[#2b2118] border-2 border-[#5c3a21] hover:border-[#eba363] hover:shadow-[0_0_15px_rgba(235,163,99,0.25)] rounded-xl p-3 shadow-2xl font-sans select-none z-50 flex gap-3 cursor-pointer transition-all active:scale-[0.98] group"
     >
       
-      {/* 🔹 ส่วนซ้าย: รูปโปรไฟล์ */}
+      {/* 🔹 ส่วนซ้าย: รูปอาชีพ */}
       <div className="w-[80px] h-[80px] bg-[#1a140f] border-2 border-[#4a2e15] rounded-lg shrink-0 flex items-center justify-center shadow-inner relative overflow-hidden">
-        <span className="text-4xl opacity-80 group-hover:scale-110 transition-transform duration-300">👤</span>
+        {classImageUrl ? (
+          <img 
+            src={classImageUrl} 
+            alt={className}
+            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+          />
+        ) : (
+          <span className="text-4xl opacity-80 group-hover:scale-110 transition-transform duration-300">👤</span>
+        )}
         
         {/* ป้ายอาชีพ */}
         <div className="absolute bottom-0 w-full bg-[#4a2e15]/90 text-center text-[10px] text-[#f5c746] py-0.5 font-bold uppercase tracking-wider">
@@ -52,19 +60,17 @@ export default function PlayerHUD({
       {/* 🔹 ส่วนขวา: ข้อมูลสเตตัส */}
       <div className="flex flex-col flex-1 justify-between py-0.5">
         
-        {/* 🔹 แถวข้อมูล: จัด Name ไว้บนสุด / Level กับ Gold อยู่บรรทัดเดียวกัน */}
+        {/* แถวข้อมูล: ชื่อ เลเวล เงิน */}
         <div className="flex flex-col mb-1.5">
           <h1 className="text-lg font-serif font-bold text-[#f5c746] drop-shadow-sm leading-none tracking-wide mb-1.5">
             {playerName}
           </h1>
           
           <div className="flex justify-between items-center">
-            {/* เลเวล (ซ้าย) */}
             <span className="text-[#a39c93] text-[11px] font-bold leading-none">
               Lv. {level}
             </span>
             
-            {/* ป้ายเงิน (ขวา) */}
             <div className="flex items-center gap-1 bg-[#1a140f] border border-[#6b4423] rounded px-1.5 py-0.5 shadow-inner">
               <span className="text-yellow-500 text-[10px] leading-none">🪙</span>
               <span className="text-[#f5c746] font-bold text-[11px] leading-none mt-[1px]">{gold}</span>
@@ -72,7 +78,7 @@ export default function PlayerHUD({
           </div>
         </div>
 
-        {/* 🔹 กลุ่มหลอดสเตตัส (HP, MP, EXP) */}
+        {/* กลุ่มหลอดสเตตัส (HP, MP, EXP) */}
         <div className="flex flex-col gap-1.5">
           {/* หลอด HP */}
           <div className="relative h-4 w-full rounded bg-[#1a140f] border border-[#4a1c1c] overflow-hidden shadow-inner">
