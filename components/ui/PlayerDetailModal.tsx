@@ -16,6 +16,9 @@ interface PlayerDetailModalProps {
   statPoints: number
   gold: number
   classImageUrl?: string
+  secStats?: any
+  maxSlots?: number
+  maxWeight?: number
   onClose: () => void
 }
 
@@ -37,12 +40,22 @@ export default function PlayerDetailModal({
   statPoints,
   gold,
   classImageUrl,
+  secStats,
+  maxSlots = 32,
+  maxWeight = 60,
   onClose
 }: PlayerDetailModalProps) {
   if (!isOpen) return null
 
-  const hpRegen = Math.floor(maxHp * 0.05) || 1
-  const mpRegen = Math.floor(maxMp * 0.05) || 1
+  const hpRegen = secStats?.hp_regen || Math.floor(maxHp * 0.05) || 1
+  const mpRegen = secStats?.mp_regen || Math.floor(maxMp * 0.05) || 1
+  const critRate = secStats?.crit_rate || 5
+  const critDmg = secStats?.crit_dmg || 150
+  const acc = secStats?.acc || 5
+  const eva = secStats?.eva || Math.floor(agi / 4)
+  const block = secStats?.block || 0
+  const dmgRed = secStats?.dmg_red || 0
+  const ignoreBlock = secStats?.ignore_block || 0
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-950/80 backdrop-blur-sm">
@@ -122,7 +135,7 @@ export default function PlayerDetailModal({
             </div>
             {/* INT */}
             <div className="flex items-center gap-1.5">
-              <span className="text-base">�</span>
+              <span className="text-base">🔮</span>
               <span className="text-stone-300">INT:</span>
               <span className="font-bold text-purple-400">{int}</span>
             </div>
@@ -146,45 +159,45 @@ export default function PlayerDetailModal({
             <div className="flex items-center gap-1.5">
               <span className="text-base">⚡</span>
               <span className="text-stone-300">Crit Rate:</span>
-              <span className="font-bold text-yellow-400">5%</span>
+              <span className="font-bold text-yellow-400">{critRate}%</span>
             </div>
             <div className="flex items-center gap-1.5">
               <span className="text-base">✨</span>
               <span className="text-stone-300">Crit Dmg:</span>
-              <span className="font-bold text-orange-400">150%</span>
+              <span className="font-bold text-orange-400">{critDmg}%</span>
             </div>
 
             <div className="flex items-center gap-1.5">
               <span className="text-base">🎯</span>
               <span className="text-stone-300">Acc:</span>
-              <span className="font-bold text-blue-400">0%</span>
+              <span className="font-bold text-blue-400">{acc}%</span>
             </div>
             <div className="flex items-center gap-1.5">
               <span className="text-base">💨</span>
               <span className="text-stone-300">Dodge:</span>
-              <span className="font-bold text-green-400">0%</span>
+              <span className="font-bold text-green-400">{eva}%</span>
             </div>
 
             <div className="flex items-center gap-1.5">
               <span className="text-base">🛡️</span>
               <span className="text-stone-300">Block:</span>
-              <span className="font-bold text-cyan-400">15%</span>
+              <span className="font-bold text-cyan-400">{block}%</span>
             </div>
             <div className="flex items-center gap-1.5">
               <span className="text-base">💎</span>
               <span className="text-stone-300">Dmg Red:</span>
-              <span className="font-bold text-purple-400">2%</span>
+              <span className="font-bold text-purple-400">{dmgRed}%</span>
             </div>
 
             <div className="flex items-center gap-1.5">
               <span className="text-base">⭐</span>
               <span className="text-stone-300">Pierce:</span>
-              <span className="font-bold text-pink-400">0%</span>
+              <span className="font-bold text-pink-400">{ignoreBlock}%</span>
             </div>
             <div className="flex items-center gap-1.5">
               <span className="text-base">⚖️</span>
               <span className="text-stone-300">น.น.:</span>
-              <span className="font-bold text-stone-300">3.5/60</span>
+              <span className="font-bold text-stone-300">0/{maxWeight}</span>
             </div>
           </div>
 

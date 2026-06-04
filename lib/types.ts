@@ -24,11 +24,27 @@ export interface ClassOption {
   name: string
   desc: string
   stats: {
+    // Base Stats
     hp: number
-    mp: number
+    maxHp: number
+    baseMp: number
     str: number
-    agi: number
     int: number
+    agi: number
+    def: number
+    
+    // Regen Stats (สำหรับฟื้นฟูทุกๆ 3 เทิร์น)
+    hpRegen: number
+    mpRegen: number
+
+    // Combat Stats
+    acc: number
+    block: number
+    dmgRed: number
+    critRate: number
+    critDmg: number
+    dodge: number
+    ignoreBlock: number
   }
   image: string
   isSprite: boolean

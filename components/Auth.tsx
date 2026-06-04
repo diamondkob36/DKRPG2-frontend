@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, FormEvent } from 'react'
+import { useState, type FormEvent } from 'react'
 import { classOptions } from '@/lib/classData'
 
 type Mode = 'welcome' | 'login' | 'register-step1' | 'register-step2'
@@ -51,6 +51,13 @@ export default function Auth() {
     setLoading(true)
     setErrorMessage('')
 
+    const selectedClass = classOptions.find(c => c.key === classKey)
+    if (!selectedClass) {
+      setErrorMessage('ไม่พบข้อมูลอาชีพ')
+      setLoading(false)
+      return
+    }
+
     try {
       const response = await fetch(`${API_URL}/api/character/create`, {
         method: 'POST',
@@ -60,6 +67,25 @@ export default function Auth() {
           username,
           password,
           class_key: classKey,
+          stats: {
+            hp: selectedClass.stats.maxHp,
+            mp: selectedClass.stats.baseMp,
+            str: selectedClass.stats.str,
+            agi: selectedClass.stats.agi,
+            int: selectedClass.stats.int,
+            def: selectedClass.stats.def,
+          },
+          combat_stats: {
+            hp_regen: selectedClass.stats.hpRegen,
+            mp_regen: selectedClass.stats.mpRegen,
+            acc: selectedClass.stats.acc,
+            block: selectedClass.stats.block,
+            dmg_red: selectedClass.stats.dmgRed,
+            crit_rate: selectedClass.stats.critRate,
+            crit_dmg: selectedClass.stats.critDmg,
+            dodge: selectedClass.stats.dodge,
+            ignore_block: selectedClass.stats.ignoreBlock,
+          },
         }),
       })
 
@@ -225,21 +251,23 @@ export default function Auth() {
           )}
 
           {mode === 'register-step2' && (
-            <div className="animate-fade-in flex flex-col justify-between">
-              <div className="flex-1 flex flex-col min-h-0">
+            <div className="animate-fade-in">
+              <div className="mb-4">
                 <h2 className="text-xl sm:text-2xl text-amber-500/90 font-bold text-center drop-shadow-md mb-1">
                   เลือกเส้นทางแห่งโชคชะตา
                 </h2>
-                <p className="text-center text-stone-300 text-sm sm:text-base drop-shadow-md mb-4">
+                <p className="text-center text-stone-300 text-sm sm:text-base drop-shadow-md">
                   &quot;{username}&quot;
                 </p>
+              </div>
                 
-                <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 max-w-7xl mx-auto w-full">
+              <div className="max-h-[60vh] overflow-y-auto px-2">
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 max-w-7xl mx-auto">
                   {classOptions.map((cls) => (
                     <div 
                       key={cls.key}
                       onClick={() => setClassKey(cls.key)}
-                      className={`relative p-3 border rounded-sm cursor-pointer transition-all duration-300 backdrop-blur-md flex flex-col h-fit ${
+                      className={`relative p-3 border rounded-sm cursor-pointer transition-all duration-300 backdrop-blur-md flex flex-col ${
                         classKey === cls.key 
                           ? 'border-amber-500 bg-amber-950/30 shadow-[0_0_20px_rgba(217,119,6,0.4)]' 
                           : 'border-stone-700/60 bg-stone-950/50 hover:border-amber-500/50 hover:bg-stone-900/60'
@@ -249,7 +277,7 @@ export default function Auth() {
                         <div className="absolute top-2 right-2 text-amber-500 text-sm drop-shadow-md">✨</div>
                       )}
                       
-                      <div className="h-24 sm:h-28 flex items-center justify-center mb-3 bg-stone-950/60 border border-stone-800/80 rounded overflow-hidden shadow-inner flex-shrink-0">
+                      <div className="h-24 flex items-center justify-center mb-2 bg-stone-950/60 border border-stone-800/80 rounded overflow-hidden shadow-inner">
                         {cls.isSprite ? (
                           <div className="sprite-md" style={{ '--frames': cls.frames } as any}>
                             <img src={cls.image} alt={cls.name} className="sprite-image-md" style={{ width: `${cls.frames * 100}%` }} />
@@ -259,16 +287,16 @@ export default function Auth() {
                         )}
                       </div>
                       
-                      <h3 className="text-sm sm:text-base font-bold text-amber-400 text-center mb-2 drop-shadow-md line-clamp-2">
+                      <h3 className="text-sm font-bold text-amber-400 text-center mb-2 drop-shadow-md">
                         {cls.name}
                       </h3>
-                      <p className="text-[11px] sm:text-xs text-stone-300 text-center mb-3 line-clamp-3 leading-relaxed">
+                      <p className="text-xs text-stone-300 text-center mb-2 line-clamp-2 leading-relaxed min-h-[2.5rem]">
                         {cls.desc}
                       </p>
                       
-                      <div className="grid grid-cols-2 gap-1 text-[10px] sm:text-xs bg-stone-950/70 p-2 border border-stone-800/80 rounded-sm shadow-inner">
-                        <div className="text-red-400/90">HP: {cls.stats.hp}</div>
-                        <div className="text-blue-400/90">MP: {cls.stats.mp}</div>
+                      <div className="grid grid-cols-2 gap-1 text-xs bg-stone-950/70 p-2 border border-stone-800/80 rounded-sm shadow-inner mt-auto">
+                        <div className="text-red-400/90">HP: {cls.stats.maxHp}</div>
+                        <div className="text-blue-400/90">MP: {cls.stats.baseMp}</div>
                         <div className="text-stone-300">STR: {cls.stats.str}</div>
                         <div className="text-stone-300">AGI: {cls.stats.agi}</div>
                       </div>
@@ -277,7 +305,7 @@ export default function Auth() {
                 </div>
               </div>
 
-              <div className="flex justify-center gap-3 mt-4 flex-shrink-0">
+              <div className="flex justify-center gap-3 mt-4">
                 <button 
                   type="button"
                   onClick={() => setMode('register-step1')}

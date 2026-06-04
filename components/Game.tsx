@@ -83,6 +83,9 @@ export default function Game({ player }: GameProps) {
           statPoints={character.stat_points}
           gold={character.gold}
           classImageUrl={classImageUrl}
+          secStats={character.secondary_stats}
+          maxSlots={character.max_slots}
+          maxWeight={character.max_weight}
           onClose={() => setShowDetailModal(false)}
         />
       </div>
