@@ -1,11 +1,10 @@
 'use client'
 
 import { useState, FormEvent } from 'react'
+import { supabase } from '@/lib/supabase'
 import { classOptions } from '@/lib/classData'
 
 type Mode = 'welcome' | 'login' | 'register-step1' | 'register-step2'
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'
 
 export default function Auth() {
   const [mode, setMode] = useState<Mode>('welcome')
@@ -23,25 +22,13 @@ export default function Auth() {
     setErrorMessage('')
     
     try {
-      const response = await fetch(`${API_URL}/api/character/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          identifier: email,
-          password: password,
-        }),
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
       })
-
-      const result = await response.json()
-      
-      if (!response.ok) {
-        throw new Error(result.error || 'เข้าสู่ระบบไม่สำเร็จ')
-      }
-
-      localStorage.setItem('player', JSON.stringify(result.data))
-      window.location.reload()
+      if (error) throw error
     } catch (error: any) {
-      setErrorMessage(error.message)
+      setErrorMessage('รหัสผ่านไม่ถูกต้อง หรือ พลังเวทขัดข้อง: ' + error.message)
     } finally {
       setLoading(false)
     }
@@ -50,24 +37,28 @@ export default function Auth() {
   const handleRegister = async () => {
     setLoading(true)
     setErrorMessage('')
+    
+    const selectedClass = classOptions.find(c => c.key === classKey)!
 
     try {
-      const response = await fetch(`${API_URL}/api/character/create`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email,
-          username,
-          password,
-          class_key: classKey,
-        }),
+      const { error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            username,
+            class_key: classKey,
+            class_name: selectedClass.name,
+            hp: selectedClass.stats.hp,
+            mp: selectedClass.stats.mp,
+            str: selectedClass.stats.str,
+            agi: selectedClass.stats.agi,
+            int: selectedClass.stats.int,
+            avatar_url: selectedClass.image
+          }
+        }
       })
-
-      const result = await response.json()
-      
-      if (!response.ok) {
-        throw new Error(result.error || 'สร้างตัวละครไม่สำเร็จ')
-      }
+      if (error) throw error
       
       alert('สร้างตัวละครสำเร็จ! ยินดีต้อนรับสู่ต่างโลก')
       setMode('login')
