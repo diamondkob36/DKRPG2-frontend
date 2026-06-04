@@ -16,6 +16,7 @@ export const classOptions: ClassOption[] = [
       critRate: 5, critDmg: 150, dodge: 0, ignoreBlock: 0
     },
     image: 'https://qvxbofhorjjdoohhhbgd.supabase.co/storage/v1/object/public/Npc/Novice_stand.webp',
+    profileImage: 'https://qvxbofhorjjdoohhhbgd.supabase.co/storage/v1/object/public/Npc/Novice_profile.webp',
     isSprite: true,
     frames: 4
   },
@@ -34,6 +35,7 @@ export const classOptions: ClassOption[] = [
       critRate: 5, critDmg: 150, dodge: 0, ignoreBlock: 0
     },
     image: 'https://qvxbofhorjjdoohhhbgd.supabase.co/storage/v1/object/public/Npc/Knight_stand2.webp',
+    profileImage: 'https://qvxbofhorjjdoohhhbgd.supabase.co/storage/v1/object/public/Npc/Knight_profile.webp',
     isSprite: true,
     frames: 4
   },
@@ -52,6 +54,7 @@ export const classOptions: ClassOption[] = [
       critRate: 10, critDmg: 200, dodge: 5, ignoreBlock: 15
     },
     image: 'https://qvxbofhorjjdoohhhbgd.supabase.co/storage/v1/object/public/Npc/Mage_stand.webp',
+    profileImage: 'https://qvxbofhorjjdoohhhbgd.supabase.co/storage/v1/object/public/Npc/Mage_profile.webp',
     isSprite: true,
     frames: 4
   },

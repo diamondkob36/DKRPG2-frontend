@@ -17,6 +17,7 @@ export default function Game({ player }: GameProps) {
   // 2. ค้นหารูปอาชีพที่ตรงกับ character.class_key
   const classInfo = classOptions.find(c => c.key === character.class_key)
   const classImageUrl = classInfo?.image || '' // ถ้าหาไม่เจอให้เป็นค่าว่าง
+  const classprofileImage = classInfo?.profileImage || ''
 
   const handleLogout = () => {
     localStorage.removeItem('player')
@@ -60,6 +61,7 @@ export default function Game({ player }: GameProps) {
           exp={character.exp}
           maxExp={character.max_exp}
           classImageUrl={classImageUrl}
+          classprofileImage={classprofileImage}
           onShowDetails={() => setShowDetailModal(true)}
         />
 
@@ -83,6 +85,7 @@ export default function Game({ player }: GameProps) {
           statPoints={character.stat_points}
           gold={character.gold}
           classImageUrl={classImageUrl}
+          classprofileImage={classprofileImage}
           secStats={character.secondary_stats}
           maxSlots={character.max_slots}
           maxWeight={character.max_weight}

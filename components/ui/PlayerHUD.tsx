@@ -12,6 +12,7 @@ interface PlayerHUDProps {
   exp: number
   maxExp: number
   classImageUrl?: string // 🆕 รับ URL รูปภาพอาชีพ
+  classprofileImage?: string
   onShowDetails: () => void
 }
 
@@ -26,7 +27,8 @@ export default function PlayerHUD({
   maxMp,
   exp,
   maxExp,
-  classImageUrl, // 🆕 เรียกใช้งาน
+  classImageUrl,
+  classprofileImage, // 🆕 เรียกใช้งาน
   onShowDetails
 }: PlayerHUDProps) {
   const hpPercent = maxHp > 0 ? (hp / maxHp) * 100 : 0;
@@ -43,9 +45,9 @@ export default function PlayerHUD({
       <div className="w-[80px] h-[80px] bg-[#1a140f] border-2 border-[#4a2e15] rounded-lg shrink-0 flex items-center justify-center shadow-inner relative overflow-hidden">
         {classImageUrl ? (
           <img 
-            src={classImageUrl} 
+            src={classprofileImage} 
             alt={className}
-            className="w-full h-full object-cover object-left group-hover:scale-110 transition-transform duration-300"
+            className="w-full h-full object-contain object-center group-hover:scale-110 transition-transform duration-300"
           />
         ) : (
           <span className="text-4xl opacity-80 group-hover:scale-110 transition-transform duration-300">👤</span>

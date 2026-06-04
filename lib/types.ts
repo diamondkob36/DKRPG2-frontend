@@ -47,6 +47,7 @@ export interface ClassOption {
     ignoreBlock: number
   }
   image: string
+  profileImage?: string
   isSprite: boolean
   frames: number
 }

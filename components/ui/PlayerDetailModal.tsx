@@ -16,6 +16,7 @@ interface PlayerDetailModalProps {
   statPoints: number
   gold: number
   classImageUrl?: string
+  classprofileImage?: string
   secStats?: any
   maxSlots?: number
   maxWeight?: number
@@ -40,6 +41,7 @@ export default function PlayerDetailModal({
   statPoints,
   gold,
   classImageUrl,
+  classprofileImage,
   secStats,
   maxSlots = 32,
   maxWeight = 60,
@@ -47,15 +49,15 @@ export default function PlayerDetailModal({
 }: PlayerDetailModalProps) {
   if (!isOpen) return null
 
-  const hpRegen = secStats?.hp_regen || Math.floor(maxHp * 0.05) || 1
-  const mpRegen = secStats?.mp_regen || Math.floor(maxMp * 0.05) || 1
-  const critRate = secStats?.crit_rate || 5
-  const critDmg = secStats?.crit_dmg || 150
-  const acc = secStats?.acc || 5
-  const eva = secStats?.eva || Math.floor(agi / 4)
-  const block = secStats?.block || 0
-  const dmgRed = secStats?.dmg_red || 0
-  const ignoreBlock = secStats?.ignore_block || 0
+  const hpRegen = secStats?.hp_regen ?? 0
+  const mpRegen = secStats?.mp_regen ?? 0
+  const critRate = secStats?.crit_rate ?? 0
+  const critDmg = secStats?.crit_dmg ?? 150
+  const acc = secStats?.acc ?? 0
+  const eva = secStats?.eva ?? 0
+  const block = secStats?.block ?? 0
+  const dmgRed = secStats?.dmg_red ?? 0
+  const ignoreBlock = secStats?.ignore_block ?? 0
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-950/80 backdrop-blur-sm">
@@ -84,7 +86,7 @@ export default function PlayerDetailModal({
               style={{ borderColor: "#DAA520" }}
             >
               {classImageUrl ? (
-                <img src={classImageUrl} alt={className} className="w-full h-full object-left object-cover" />
+                <img src={classprofileImage} alt={className} className="w-full h-full object-center object-contain" />
               ) : (
                 <span className="text-4xl">⚔️</span>
               )}
