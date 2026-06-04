@@ -45,7 +45,7 @@ export default function PlayerHUD({
           <img 
             src={classImageUrl} 
             alt={className}
-            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+            className="w-full h-full object-cover object-left group-hover:scale-110 transition-transform duration-300"
           />
         ) : (
           <span className="text-4xl opacity-80 group-hover:scale-110 transition-transform duration-300">👤</span>

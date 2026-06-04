@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import PlayerHUD from './ui/PlayerHUD'
 import GameMenu from './ui/GameMenu'
 import PlayerDetailModal from './ui/PlayerDetailModal'
+import { classOptions } from '@/lib/classData'
 
 interface GameProps {
   player: any
@@ -12,6 +13,10 @@ interface GameProps {
 export default function Game({ player }: GameProps) {
   const [character, setCharacter] = useState(player)
   const [showDetailModal, setShowDetailModal] = useState(false)
+
+  // 2. ค้นหารูปอาชีพที่ตรงกับ character.class_key
+  const classInfo = classOptions.find(c => c.key === character.class_key)
+  const classImageUrl = classInfo?.image || '' // ถ้าหาไม่เจอให้เป็นค่าว่าง
 
   const handleLogout = () => {
     localStorage.removeItem('player')
@@ -54,6 +59,7 @@ export default function Game({ player }: GameProps) {
           maxMp={character.base_stats.max_mp}
           exp={character.exp}
           maxExp={character.max_exp}
+          classImageUrl={classImageUrl}
           onShowDetails={() => setShowDetailModal(true)}
         />
 
@@ -76,6 +82,7 @@ export default function Game({ player }: GameProps) {
           def={character.secondary_stats.def}
           statPoints={character.stat_points}
           gold={character.gold}
+          classImageUrl={classImageUrl}
           onClose={() => setShowDetailModal(false)}
         />
       </div>
