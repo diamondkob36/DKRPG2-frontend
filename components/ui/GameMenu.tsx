@@ -19,6 +19,7 @@ export default function GameMenu({ onMenuClick, menuItems }: GameMenuProps) {
   const [isOpen, setIsOpen] = useState(false)
 
   const defaultMenuItems: MenuItem[] = [
+    { id: 'inventory', icon: '🎒', label: 'ช่องเก็บของ' },
     { id: 'combat', icon: '⚔️', label: 'ต่อสู้' },
     { id: 'shop', icon: '🏪', label: 'ร้านค้า' },
     { id: 'skills', icon: '📚', label: 'สกิล' },

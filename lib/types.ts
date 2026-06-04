@@ -17,6 +17,10 @@ export interface Character {
   def: number
   stat_points: number
   avatar_url?: string
+  max_slots: number
+  max_weight: number
+  inventory: InventoryItem[]
+  equipment: Record<string, string>
 }
 
 export interface ClassOption {
@@ -50,4 +54,14 @@ export interface ClassOption {
   profileImage?: string
   isSprite: boolean
   frames: number
+}
+
+export interface InventoryItem {
+  uid: string
+  item_ref_id: string
+  quantity: number
+  upgrade_level: number
+  durability: number
+  max_durability: number
+  slot_index: number
 }

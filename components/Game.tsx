@@ -5,6 +5,7 @@ import PlayerHUD from './ui/PlayerHUD'
 import GameMenu from './ui/GameMenu'
 import PlayerDetailModal from './ui/PlayerDetailModal'
 import { classOptions } from '@/lib/classData'
+import InventoryModal from './ui/InventoryModal'
 
 interface GameProps {
   player: any
@@ -18,6 +19,7 @@ export default function Game({ player }: GameProps) {
   const classInfo = classOptions.find(c => c.key === character.class_key)
   const classImageUrl = classInfo?.image || '' // ถ้าหาไม่เจอให้เป็นค่าว่าง
   const classprofileImage = classInfo?.profileImage || ''
+  const [showInventoryModal, setShowInventoryModal] = useState(false)
 
   const handleLogout = () => {
     localStorage.removeItem('player')
@@ -26,6 +28,9 @@ export default function Game({ player }: GameProps) {
 
   const handleMenuClick = (menuId: string) => {
     switch (menuId) {
+      case 'inventory': // 3. ดักจับการกดเมนู Inventory (ต้องไปเพิ่มปุ่มใน GameMenu.tsx ด้วยนะ)
+        setShowInventoryModal(true)
+        break
       case 'combat':
         console.log('เปิดระบบต่อสู้')
         break
@@ -90,6 +95,14 @@ export default function Game({ player }: GameProps) {
           maxSlots={character.max_slots}
           maxWeight={character.max_weight}
           onClose={() => setShowDetailModal(false)}
+        />
+
+        <InventoryModal 
+          isOpen={showInventoryModal}
+          onClose={() => setShowInventoryModal(false)}
+          inventory={character.inventory || []} // ส่งข้อมูลกระเป๋าไป
+          equipment={character.equipment || {}}
+          maxSlots={character.max_slots || 32}
         />
       </div>
     </div>
